@@ -1,8 +1,9 @@
-# WAM-Diff2: Hierarchical AR-to-Diffusion Distillation for Highly Efficient Autonomous Driving VLA
+<h1 align="center">WAM-Diff2: Hierarchical AR-to-Diffusion Distillation for Highly Efficient Autonomous Driving VLA</h1>
 
 <p align="center">
   Zhihao Zhu<sup>1,*</sup> · Hanlin Shang<sup>1,*</sup> · Mingwang Xu<sup>1,*</sup> ·
-  Feipeng Cai<sup>2,*</sup> · Zhuolin He<sup>1</sup> · Yaoyi Li<sup>2</sup> ·
+  Feipeng Cai<sup>2,*</sup> · Zhuolin He<sup>1</sup> · Yaoyi Li<sup>2</sup>
+  <br>
   Jianhua Han<sup>2</sup> · Hang Xu<sup>2</sup> · Siyu Zhu<sup>1,†</sup>
 </p>
 
