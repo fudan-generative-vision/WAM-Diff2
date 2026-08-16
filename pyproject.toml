@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wam-diff2"
+version = "0.1.0"
+description = "Training and inference code for WAM Diff2"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = {text = "Apache-2.0"}
+authors = [{name = "WAM Diff2 contributors"}]
+dependencies = [
+  "accelerate==1.12.0",
+  "datasets==4.4.1",
+  "einops==0.8.1",
+  "fsspec==2025.10.0",
+  "numpy==2.3.5",
+  "omegaconf==2.3.0",
+  "packaging==25.0",
+  "Pillow==12.0.0",
+  "pyarrow==22.0.0",
+  "PyYAML==6.0.3",
+  "qwen-vl-utils==0.0.14",
+  "safetensors==0.7.0",
+  "torch==2.8.0",
+  "torchao==0.13.0",
+  "torchdata==0.11.0",
+  "torchvision==0.23.0",
+  "tqdm==4.67.1",
+  "transformers==4.57.3",
+  "wandb==0.23.1",
+]
+
+[project.optional-dependencies]
+train = ["deepspeed==0.17.0"]
+dev = [
+  "build>=1.2",
+  "pip-audit>=2.7",
+  "pylint>=3.3",
+  "pytest>=8.3",
+  "ruff>=0.8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

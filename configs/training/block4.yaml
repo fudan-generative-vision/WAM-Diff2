@@ -1,0 +1,84 @@
+step_scheduler:
+  global_batch_size: 128
+  local_batch_size: 4
+  ckpt_every_steps: 100
+  num_epochs: 5
+
+dist_env:
+  backend: nccl
+  timeout_minutes: 20
+
+rng:
+  _target_: wam_diff.components.training.rng.StatefulRNG
+  seed: 42
+  ranked: true
+
+model:
+  _target_: wam_diff.NeMoAutoModelForImageTextToText.from_pretrained
+  pretrained_model_name_or_path: checkpoints/WAM-Diff-B1-2B
+  attn_implementation: sdpa
+  torch_dtype: torch.bfloat16
+
+processor:
+  _target_: transformers.AutoProcessor.from_pretrained
+  pretrained_model_name_or_path: checkpoints/WAM-Diff-B1-2B
+  min_pixels: 12544
+  max_pixels: 2073600
+
+checkpoint:
+  enabled: true
+  checkpoint_dir: outputs/WAM-Diff2-B4-2B
+  model_save_format: torch_save
+
+distributed:
+  _target_: wam_diff.components.distributed.fsdp2.FSDP2Manager
+  dp_size: null
+  tp_size: 1
+  cp_size: 1
+  sequence_parallel: false
+  activation_checkpointing: true
+
+loss_fn:
+  _target_: wam_diff.losses.weighted_ce.WeightedCrossEntropy
+
+dataset:
+  _target_: wam_diff.data.datasets.qwen_vl_nav_dataset
+  path_or_dataset: data/train.json
+  max_len: 8192
+  drop_last: true
+  root_dir: data
+  prior_dist: Mask
+  min_pixels: 12544
+  max_pixels: 2073600
+
+dataloader:
+  _target_: torchdata.stateful_dataloader.StatefulDataLoader
+  num_workers: 8
+  pin_memory: true
+  prefetch_factor: 4
+  collate_fn:
+    _target_: wam_diff.data.collate_fns.wam_diff2_block_collate_fn
+    noise_scheduler:
+      _target_: wam_diff.utils.scheduler.CondOTScheduler
+    model_type: qwen3-vl
+    mask_token_id: 151671
+    vocab_size: 151646
+    pad_token: <|im_end|>
+    im_end_token: <|im_end|>
+    block_size: 4
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 4.0e-5
+  merger_lr: 4.0e-5
+  visual_lr: 2.0e-6
+  weight_decay: 0.05
+  betas: [0.9, 0.95]
+
+lr_scheduler:
+  lr_decay_style: cosine
+
+freeze_config:
+  freeze_embeddings: false
+  freeze_vision_tower: false
+  freeze_language_model: false

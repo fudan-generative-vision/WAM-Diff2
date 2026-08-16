@@ -1,0 +1,99 @@
+# Accelerate/DeepSpeed distillation experiment configuration.
+# Launch with: bash scripts/train_distil.sh
+
+seed: 42
+
+step_scheduler:
+  global_batch_size: 128
+  local_batch_size: 2
+  ckpt_every_steps: 100
+  num_epochs: 5
+
+# loss = (1 - kd_ratio) * CE + kd_ratio * KD
+kd_ratio: 1.0
+kd_loss_fn:
+  _target_: wam_diff.losses.kd_loss.Block_JSDLoss
+  temperature: 1.0
+
+# On-policy distillation.
+on_policy: true
+generate_interval: 2
+max_new_tokens: 512
+denoising_steps: 32
+generate_temperature: 0.0
+generate_top_k: 0
+generate_top_p: 1.0
+
+model:
+  _target_: wam_diff.NeMoAutoModelForImageTextToText.from_pretrained
+  pretrained_model_name_or_path: checkpoints/WAM-Diff2-B32-2B
+  attn_implementation: flash_attention_2
+  torch_dtype: torch.bfloat16
+
+# The student and teacher share this processor/tokenizer.
+processor:
+  _target_: transformers.AutoProcessor.from_pretrained
+  pretrained_model_name_or_path: checkpoints/WAM-Diff2-B32-2B
+  min_pixels: 12544
+  max_pixels: 2073600
+
+teacher_model:
+  _target_: wam_diff.NeMoAutoModelForImageTextToText.from_pretrained
+  pretrained_model_name_or_path: checkpoints/WAM-Diff2-B32-8B
+  attn_implementation: flash_attention_2
+  torch_dtype: torch.bfloat16
+
+offload_teacher_model: false
+
+checkpoint:
+  enabled: true
+  checkpoint_dir: outputs/distillation/WAM-Diff2-B32-2B-from-8B
+  model_save_format: torch_save
+
+loss_fn:
+  _target_: wam_diff.losses.weighted_ce.WeightedCrossEntropy
+
+dataset:
+  _target_: wam_diff.data.datasets.qwen_vl_nav_dataset
+  path_or_dataset: data/train.json
+  max_len: 8192
+  drop_last: true
+  prior_dist: Mask
+  min_pixels: 12544
+  max_pixels: 2073600
+
+dataloader:
+  _target_: torchdata.stateful_dataloader.StatefulDataLoader
+  num_workers: 8
+  prefetch_factor: 4
+  pin_memory: true
+  shuffle: true
+  collate_fn:
+    _target_: wam_diff.data.collate_fns.wam_diff2_block_collate_fn
+    noise_scheduler:
+      _target_: wam_diff.utils.scheduler.CondOTScheduler
+    model_type: qwen3-vl
+    mask_token_id: 151671
+    vocab_size: 151646
+    pad_token: <|im_end|>
+    im_end_token: <|im_end|>
+    block_size: 32
+    teacher_block_size: 32
+    mask_ratio_min: 0.1
+    mask_ratio_max: 0.5
+
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 5.0e-6
+  merger_lr: 5.0e-6
+  visual_lr: 2.0e-6
+  weight_decay: 0.0
+  betas: [0.9, 0.95]
+
+lr_scheduler:
+  lr_decay_style: cosine
+
+freeze_config:
+  freeze_embeddings: false
+  freeze_vision_tower: false
+  freeze_language_model: false

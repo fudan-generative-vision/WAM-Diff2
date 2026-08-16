@@ -1,0 +1,36 @@
+compute_environment: LOCAL_MACHINE
+distributed_type: DEEPSPEED
+mixed_precision: bf16
+main_training_function: main
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false
+deepspeed_config:
+  deepspeed_multinode_launcher: standard
+  zero3_init_flag: false
+  train_batch_size: auto
+  train_micro_batch_size_per_gpu: auto
+  gradient_accumulation_steps: 1
+  gradient_clipping: 1.0
+  zero_allow_untested_optimizer: true
+  fp16:
+    enabled: auto
+    loss_scale: 0
+    loss_scale_window: 1000
+    initial_scale_power: 16
+    hysteresis: 2
+    min_loss_scale: 1
+  bf16:
+    enabled: auto
+  zero_optimization:
+    stage: 2
+    allgather_partitions: true
+    allgather_bucket_size: 500000000
+    overlap_comm: false
+    reduce_scatter: true
+    reduce_bucket_size: 500000000
+    contiguous_gradients: true
+    round_robin_gradients: true
