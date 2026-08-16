@@ -1,0 +1,12 @@
+# Paper source archive is not needed by the static site.
+rvggtjkxkqskrsxxhxbzwjvtbrgptvmd.zip
+
+# Local visual-QA screenshots.
+preview.png
+preview-mobile.png
+
+# Unused full-resolution source assets retained locally.
+assets/arch.drawio.png
+assets/teaser.png
+
+.DS_Store

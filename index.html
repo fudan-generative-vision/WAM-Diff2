@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WAM-Diff2 transforms autoregressive autonomous-driving VLAs into efficient parallel discrete diffusion models through hierarchical distillation.">
+  <meta name="theme-color" content="#c7000b">
+  <meta property="og:title" content="WAM-Diff2">
+  <meta property="og:description" content="Hierarchical AR-to-Diffusion Distillation for Highly Efficient Autonomous Driving VLA">
+  <meta property="og:image" content="assets/social-preview.png">
+  <title>WAM-Diff2</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header" aria-label="Primary navigation">
+    <a class="wordmark" href="#top" aria-label="WAM-Diff2 home">
+      <span>WAM-Diff2</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Page sections">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#citation">Citation</a>
+    </nav>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open navigation">
+      <span></span><span></span>
+    </button>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile page sections">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#citation">Citation</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-glow hero-glow-one" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-two" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <div class="eyebrow reveal"><span></span> Preprint · 2026</div>
+        <h1 class="reveal">WAM-Diff<span>2</span></h1>
+        <p class="hero-subtitle reveal">Hierarchical AR-to-Diffusion Distillation<br>for Highly Efficient Autonomous Driving VLA</p>
+
+        <div class="authors reveal" aria-label="Paper authors">
+          <div>
+            <a href="#" data-placeholder="Author profile">Zhihao Zhu</a><sup>1,*</sup>,
+            <a href="#" data-placeholder="Author profile">Hanlin Shang</a><sup>1,*</sup>,
+            <a href="#" data-placeholder="Author profile">Mingwang Xu</a><sup>1,*</sup>,
+            <a href="#" data-placeholder="Author profile">Feipeng Cai</a><sup>2,*</sup>,
+            <a href="#" data-placeholder="Author profile">Zhuolin He</a><sup>1</sup>
+          </div>
+          <div>
+            <a href="#" data-placeholder="Author profile">Yaoyi Li</a><sup>2</sup>,
+            <a href="#" data-placeholder="Author profile">Jianhua Han</a><sup>2</sup>,
+            <a href="#" data-placeholder="Author profile">Hang Xu</a><sup>2</sup>,
+            <a href="#" data-placeholder="Author profile">Siyu Zhu</a><sup>1,†</sup>
+          </div>
+        </div>
+
+        <div class="affiliations reveal">
+          <span><sup>1</sup> Fudan University</span>
+          <span><sup>2</sup> Yinwang Intelligent Technology Co., Ltd.</span>
+          <small><sup>*</sup> Equal contribution &nbsp; <sup>†</sup> Corresponding author</small>
+        </div>
+
+        <div class="hero-actions reveal">
+          <a class="button button-dark" href="2608.01035v1.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6zM14 2v5h5M9 13h6M9 17h6"/></svg>
+            Paper
+          </a>
+          <a class="button button-dark" href="https://arxiv.org/abs/2608.01035" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17 10 3l3 7 2-5 5 12M6 13h12M8 21l4-8 4 8"/></svg>
+            arXiv
+          </a>
+          <a class="button button-dark" href="https://github.com/fudan-generative-vision/WAM-Diff2" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9 3 12l5 3M16 9l5 3-5 3M14 5l-4 14"/></svg>
+            Code
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="teaser section-shell reveal" aria-labelledby="teaser-caption">
+      <figure class="paper-figure hero-figure">
+        <button class="image-button" type="button" data-lightbox="assets/hero-overview.png" aria-label="Open overview figure">
+          <img src="assets/hero-overview.png" alt="WAM-Diff2 efficiency, multi-task performance, and trajectory robustness comparison" width="2000" height="762">
+          <span class="expand-hint" aria-hidden="true">↗</span>
+        </button>
+        <figcaption id="teaser-caption">
+          WAM-Diff2 preserves multi-task proficiency while moving from sequential autoregressive decoding to fast parallel diffusion. Hardware-aware execution compounds the gain from <strong>2.8×</strong> to <strong>15.1×</strong>.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="paper-section" id="abstract">
+      <div class="section-shell narrow reveal">
+        <div class="section-kicker">01 · Overview</div>
+        <h2>Abstract</h2>
+        <p class="lead">
+          Vision-Language-Action models unify scene understanding, perception, and motion planning, but sequential autoregressive decoding makes them slow and susceptible to exposure bias. Specialized diffusion policies execute in parallel, yet typically sacrifice the broad visual-linguistic reasoning learned by large autoregressive models.
+        </p>
+        <p>
+          <strong>WAM-Diff2</strong> bridges this divide with a multi-task discrete diffusion VLA and a three-stage hierarchical distillation strategy. Progressive block-wise adaptation, block-wise distillation, and model-wise cross-scale distillation preserve the semantic foundations of a pre-trained generalist while converting it into a parallel refinement architecture. Across driving understanding, perception, and planning benchmarks, WAM-Diff2 matches the autoregressive baseline while mitigating long-horizon error accumulation. The transition yields a <strong>2.8× decoding speedup</strong>, scaling to <strong>15.1×</strong> with FlashInfer and CUDA Graphs.
+        </p>
+      </div>
+
+      <div class="metrics section-shell reveal" aria-label="Key results">
+        <article><strong>15.1<span>×</span></strong><p>token-decoding acceleration</p></article>
+        <article><strong>673.4</strong><p>optimized decode tokens / second</p></article>
+        <article><strong>5.8<span>%</span></strong><p>lower average waypoint L2 error</p></article>
+      </div>
+    </section>
+
+    <section class="paper-section method-section" id="method">
+      <div class="section-shell reveal">
+        <div class="section-kicker">02 · Method</div>
+        <h2>From sequential generation<br>to parallel refinement</h2>
+        <p class="section-intro">
+          WAM-Diff2 replaces token-by-token causal decoding with block-causal attention: tokens refine each other bidirectionally <em>within</em> a block, while causality is preserved <em>across</em> blocks. A staged curriculum protects the model's multi-task knowledge throughout the architectural shift.
+        </p>
+      </div>
+
+      <div class="section-shell wide reveal">
+        <figure class="paper-figure architecture-figure">
+          <button class="image-button" type="button" data-lightbox="assets/method-architecture.png" aria-label="Open architecture diagram">
+            <img src="assets/method-architecture.png" alt="WAM-Diff2 model architecture and three-stage AR-to-diffusion distillation pipeline" width="2200" height="859" loading="lazy">
+            <span class="expand-hint" aria-hidden="true">↗</span>
+          </button>
+          <figcaption>Unified token-space modeling supports driving understanding, visual perception, and action planning with one diffusion VLA.</figcaption>
+        </figure>
+      </div>
+
+      <div class="stage-grid section-shell reveal">
+        <article class="stage-card">
+          <div class="stage-number">01</div>
+          <div class="stage-copy">
+            <span>Stage I</span>
+            <h3>Progressive Block-Wise Adaptation</h3>
+            <p>Gradually expand the decoding block from <strong>B = 1 → 4 → 8 → 16 → 32</strong>, smoothly relaxing causal attention without destabilizing the pre-trained model.</p>
+          </div>
+        </article>
+        <article class="stage-card">
+          <div class="stage-number">02</div>
+          <div class="stage-copy">
+            <span>Stage II</span>
+            <h3>Block-Wise Distillation</h3>
+            <p>A stable small-block diffusion teacher guides progressively larger-block students on intermediate noisy states, recovering quality and reducing exposure bias.</p>
+          </div>
+        </article>
+        <article class="stage-card">
+          <div class="stage-number">03</div>
+          <div class="stage-copy">
+            <span>Stage III</span>
+            <h3>Model-Wise Cross-Scale Distillation</h3>
+            <p>An advanced <strong>8B diffusion teacher</strong> transfers holistic semantic capabilities into an efficient <strong>2B student</strong> sharing the same generation paradigm.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="paper-section results-section" id="results">
+      <div class="section-shell reveal">
+        <div class="section-kicker">03 · Experiments</div>
+        <h2>A unified model for understanding, perception, and planning.<br>Preserving performance at higher decoding throughput.</h2>
+        <p class="section-intro">A single frozen checkpoint is evaluated across DriveBench, LingoQA, COCO, NAVSIM v1, and NAVSIM v2. Larger blocks increase parallelism while retaining competitive understanding, perception, and planning performance.</p>
+      </div>
+
+      <div class="section-shell table-shell reveal">
+        <div class="table-heading">
+          <div><span>Unified multi-task evaluation</span><h3>Performance &amp; decoding efficiency</h3></div>
+          <div class="table-legend"><i></i> WAM-Diff2</div>
+        </div>
+        <div class="table-scroll" tabindex="0" aria-label="Scrollable result table">
+          <table>
+            <thead>
+              <tr><th>Method</th><th>DriveBench ↑</th><th>LingoQA ↑</th><th>COCO ↑</th><th>NAVSIM v1 ↑</th><th>NAVSIM v2 ↑</th><th>Decode TPS ↑</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Qwen3-VL-2B</td><td>47.68</td><td>48.00</td><td>34.20</td><td>—</td><td>—</td><td>44.5</td></tr>
+              <tr class="baseline"><td>Ours-2B <small>B=1 · AR</small></td><td>51.23</td><td><strong>68.40</strong></td><td><strong>39.20</strong></td><td><strong>88.14</strong></td><td><strong>88.32</strong></td><td>44.5</td></tr>
+              <tr class="ours"><td>WAM-Diff2 <small>B=4</small></td><td>48.92</td><td>68.20</td><td>37.80</td><td>87.87</td><td>87.99</td><td>68.3 / 401.4</td></tr>
+              <tr class="ours"><td>WAM-Diff2 <small>B=8</small></td><td>48.81</td><td>68.00</td><td>37.30</td><td>87.57</td><td>87.78</td><td>89.5 / 561.6</td></tr>
+              <tr class="ours"><td>WAM-Diff2 <small>B=16</small></td><td>48.77</td><td>66.00</td><td>36.50</td><td>87.32</td><td>87.30</td><td>108.4 / 635.3</td></tr>
+              <tr class="ours highlight"><td>WAM-Diff2 <small>B=32</small></td><td>48.80</td><td>65.80</td><td>36.30</td><td>87.44</td><td>87.50</td><td><strong>124.8 / 673.4</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Dual TPS values denote standard / FlashInfer + CUDA Graph optimized execution. NAVSIM v1 values omit score-based candidate selection for a direct architectural comparison.</p>
+      </div>
+
+      <div class="section-shell reveal">
+        <figure class="paper-figure flat-figure">
+          <button class="image-button" type="button" data-lightbox="assets/performance-tradeoff.png" aria-label="Open performance-efficiency trade-off chart">
+            <img src="assets/performance-tradeoff.png" alt="Performance-efficiency trade-offs across DriveBench, LingoQA, COCO, and NAVSIM" width="1800" height="263" loading="lazy">
+            <span class="expand-hint" aria-hidden="true">↗</span>
+          </button>
+          <figcaption>Planning and driving understanding remain robust across a wide throughput range; coordinate-heavy visual grounding degrades earlier.</figcaption>
+        </figure>
+      </div>
+
+      <div class="bias-grid section-shell reveal">
+        <div class="bias-copy">
+          <div class="section-kicker">Long-horizon robustness</div>
+          <h3>Less drift,<br>step after step.</h3>
+          <p>Autoregressive prediction commits permanently to early mistakes. Bidirectional refinement lets WAM-Diff2 revise uncertain tokens within each block, reducing the average per-waypoint L2 error by <strong>5.8%</strong> across 12,146 paired NAVSIM samples.</p>
+          <div class="bias-stat"><span>0.5935</span><i>→</i><strong>0.5589</strong><small>average L2 error</small></div>
+        </div>
+        <figure class="paper-figure plot-figure">
+          <button class="image-button" type="button" data-lightbox="assets/trajectory-l2-error.png" aria-label="Open trajectory error chart">
+            <img src="assets/trajectory-l2-error.png" alt="Per-waypoint L2 error comparing autoregressive baseline and WAM-Diff2" width="1800" height="1072" loading="lazy">
+            <span class="expand-hint" aria-hidden="true">↗</span>
+          </button>
+        </figure>
+      </div>
+
+      <div class="section-shell qualitative reveal">
+        <div class="qualitative-heading">
+          <div class="section-kicker">Qualitative results</div>
+          <h3>Driving understanding, visual perception,<br>and motion planning.</h3>
+        </div>
+        <div class="gallery">
+          <figure class="gallery-wide">
+            <figcaption><b>NAVSIM</b><span>Robust planning across diverse scenes</span></figcaption>
+            <button class="image-button" type="button" data-lightbox="assets/qualitative-navsim.png" aria-label="Open NAVSIM results">
+              <img src="assets/qualitative-navsim.png" alt="WAM-Diff2 qualitative planning results on NAVSIM" width="1800" height="639" loading="lazy">
+              <span class="expand-hint" aria-hidden="true">↗</span>
+            </button>
+          </figure>
+          <figure class="gallery-wide">
+            <figcaption><b>Bench2Drive</b><span>Closed-loop generalization</span></figcaption>
+            <button class="image-button" type="button" data-lightbox="assets/qualitative-bench2drive.png" aria-label="Open Bench2Drive results">
+              <img src="assets/qualitative-bench2drive.png" alt="WAM-Diff2 qualitative planning results on Bench2Drive" width="1800" height="600" loading="lazy">
+              <span class="expand-hint" aria-hidden="true">↗</span>
+            </button>
+          </figure>
+          <figure>
+            <figcaption><b>Driving understanding</b><span>Grounded scene reasoning</span></figcaption>
+            <button class="image-button" type="button" data-lightbox="assets/qualitative-driving-understanding.png" aria-label="Open driving understanding results">
+              <img src="assets/qualitative-driving-understanding.png" alt="WAM-Diff2 driving understanding examples" width="1800" height="903" loading="lazy">
+              <span class="expand-hint" aria-hidden="true">↗</span>
+            </button>
+          </figure>
+          <figure>
+            <figcaption><b>Visual perception</b><span>Dense spatial grounding</span></figcaption>
+            <button class="image-button" type="button" data-lightbox="assets/qualitative-visual-perception.png" aria-label="Open visual perception results">
+              <img src="assets/qualitative-visual-perception.png" alt="WAM-Diff2 visual perception and object grounding examples" width="1800" height="1031" loading="lazy">
+              <span class="expand-hint" aria-hidden="true">↗</span>
+            </button>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="citation-section" id="citation">
+      <div class="section-shell citation-grid reveal">
+        <div>
+          <div class="section-kicker">04 · Reference</div>
+          <h2>Citation</h2>
+          <p>If you find WAM-Diff2 useful in your research, please consider citing our paper.</p>
+        </div>
+        <div class="code-card">
+          <button class="copy-button" type="button" aria-label="Copy BibTeX citation">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h11v12H8zM5 16H4V4h11v1"/></svg>
+            <span>Copy</span>
+          </button>
+          <pre><code id="bibtex">@article{zhu2026wamdiff2,
+  title   = {WAM-Diff2: Hierarchical AR-to-Diffusion
+             Distillation for Highly Efficient Autonomous Driving VLA},
+  author  = {Zhu, Zhihao and Shang, Hanlin and Xu, Mingwang and
+             Cai, Feipeng and He, Zhuolin and Li, Yaoyi and
+             Han, Jianhua and Xu, Hang and Zhu, Siyu},
+  journal = {arXiv preprint arXiv:2608.01035},
+  year    = {2026}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner section-shell">
+      <a class="wordmark footer-wordmark" href="#top"><span>WAM-Diff2</span></a>
+      <p>Research assets © their respective authors.</p>
+      <a class="back-top" href="#top" aria-label="Back to top">↑</a>
+    </div>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite">Link coming soon.</div>
+  <dialog class="lightbox" aria-label="Expanded research figure">
+    <button class="lightbox-close" type="button" aria-label="Close image viewer">×</button>
+    <img src="" alt="Expanded research figure">
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
