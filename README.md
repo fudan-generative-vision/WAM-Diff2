@@ -17,8 +17,9 @@
 
 <p align="center">
   <a href="https://github.com/fudan-generative-vision/WAM-Diff2"><img src="https://img.shields.io/badge/GitHub-Code-181717?logo=github" alt="GitHub"></a>
+  <a href="https://fudan-generative-vision.github.io/WAM-Diff2/"><img src="https://img.shields.io/badge/Project-Page-0366D6?logo=githubpages" alt="Project Page"></a>
   <a href="https://arxiv.org/abs/2608.01035"><img src="https://img.shields.io/badge/arXiv-2608.01035-b31b1b?logo=arxiv" alt="arXiv"></a>
-  <a href="https://huggingface.co/fudan-generative-ai"><img src="https://img.shields.io/badge/Hugging%20Face-Models-FFD21E?logo=huggingface" alt="Hugging Face"></a>
+  <a href="https://huggingface.co/fudan-generative-ai/WAM-Diff2"><img src="https://img.shields.io/badge/Hugging%20Face-Models-FFD21E?logo=huggingface" alt="Hugging Face"></a>
 </p>
 
 ## News
@@ -57,7 +58,9 @@ match the installed PyTorch and CUDA versions.
 
 ### Model checkpoint
 
-Download the WAM-Diff2 checkpoint from Hugging Face and place it at:
+Download the WAM-Diff2 checkpoint from
+[Hugging Face](https://huggingface.co/fudan-generative-ai/WAM-Diff2) and place it
+at:
 
 ```text
 checkpoints/WAM-Diff2-B32-2B/
