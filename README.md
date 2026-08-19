@@ -10,4 +10,4 @@ python3 -m http.server 8000
 
 Then open <http://localhost:8000>.
 
-The paper button points to the included `2608.01035v1.pdf`. Author profile and code links are intentionally marked as placeholders until their final URLs are available.
+Author profile links are placeholders until their final URLs are available.
